@@ -1,0 +1,1635 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Terminals Management API v1",
+    "contact": {
+      "name": "Antonello Provenzano",
+      "email": "antonello@deveel.com"
+    },
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.ocm.deveel.net"
+    }
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Creates a Terminal",
+        "operationId": "createTerminal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewServerTerminal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The terminal was successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerTerminal"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request contains invalid elements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "409": {
+            "description": "A terminal with the same address already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "create:terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "/{id}": {
+      "get": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Gets a Terminal",
+        "operationId": "getTerminal",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The terminal was found and returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerTerminal"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The terminal was not found"
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:terminal"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Deletes a Tenant's Terminal",
+        "operationId": "removeTerminal",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The terminal was removed from the tenant space"
+          },
+          "404": {
+            "description": "None terminal with the given ID was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "delete:terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "/page": {
+      "get": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Gets a page of Terminals",
+        "operationId": "getTerminalPage",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "p",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "c",
+            "in": "query",
+            "schema": {
+              "maximum": 150,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "s",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The terminals page was found and returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageQueryResultOfServerTerminal"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "/lookup": {
+      "post": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Looks up a Terminal",
+        "operationId": "lookupTerminal",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TerminalLookup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The terminal was found and returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerTerminal"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The content of the request is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "404": {
+            "description": "The terminal was not found"
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "/{id}/state": {
+      "put": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Changes the Status of a Terminal",
+        "operationId": "changeTerminalStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTerminalState"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The terminal state was changed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerTerminal"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "None terminal with the given ID was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "400": {
+            "description": "The new status is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "update:terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "/{id}/role": {
+      "put": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Changes the Role of a Terminal",
+        "operationId": "changeTerminalRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTerminalRole"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The terminal role was changed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerTerminal"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The terminal was not changed"
+          },
+          "404": {
+            "description": "None terminal with the given ID was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "400": {
+            "description": "The new role is invalid for the terminal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "update:terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "/inventory/request": {
+      "post": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Requests a Terminal",
+        "operationId": "requestTerminal",
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTerminalAssignmentRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTerminalAssignmentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTerminalAssignmentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTerminalAssignmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The request for the assignment of the terminal was accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerminalAssignmentRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerminalAssignmentRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The source terminal from the inventory was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "400": {
+            "description": "The request contains invalid elements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "409": {
+            "description": "A terminal with the same address already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "request:terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "/provider": {
+      "get": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "List All Supported Providers",
+        "operationId": "listProviders",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of providers is returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TerminalProvider"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TerminalProvider"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:terminal_provider"
+            ]
+          }
+        ]
+      }
+    },
+    "/provider/{code}": {
+      "get": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Get a Provider by its Code",
+        "operationId": "getProvider",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The providers is found and returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerminalProvider"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerminalProvider"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The provider was not found"
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:terminal_provider"
+            ]
+          }
+        ]
+      }
+    },
+    "/request/{id}": {
+      "get": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Gets a Terminal Assignment Request",
+        "operationId": "getTerminalRequest",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The terminal assignment request with the given ID is returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerminalAssignmentRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerminalAssignmentRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No channel with the given ID was found"
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:terminal"
+            ]
+          }
+        ]
+      }
+    },
+    "/request": {
+      "get": {
+        "tags": [
+          "terminal"
+        ],
+        "summary": "Gets a page of Terminal Assignment Requests",
+        "operationId": "getTerminalRequests",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "p",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "c",
+            "in": "query",
+            "schema": {
+              "maximum": 150,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "s",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of terminal assignment requests is returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageQueryResultOfTerminalAssignmentRequest"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageQueryResultOfTerminalAssignmentRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:terminal"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewServerTerminal": {
+        "required": [
+          "address",
+          "provider",
+          "role",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "settings": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          },
+          "provider": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/TerminalRoles"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ServerTerminalType"
+          },
+          "address": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "NewTerminalAssignmentRequest": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/TerminalRoles"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "terminalId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "NewTerminalRole": {
+        "required": [
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/TerminalRoles"
+          }
+        }
+      },
+      "NewTerminalState": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/TerminalStatus"
+          }
+        },
+        "additionalProperties": { }
+      },
+      "PageQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "PageQueryResultOfServerTerminal": {
+        "required": [
+          "query",
+          "totalItems",
+          "totalPages"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "$ref": "#/components/schemas/PageQuery"
+          },
+          "self": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "first": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "last": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServerTerminal"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        }
+      },
+      "PageQueryResultOfTerminalAssignmentRequest": {
+        "required": [
+          "query",
+          "totalItems",
+          "totalPages"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "$ref": "#/components/schemas/PageQuery"
+          },
+          "self": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "first": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "last": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "totalItems": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TerminalAssignmentRequest"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "RequestedTerminal": {
+        "required": [
+          "terminalId"
+        ],
+        "type": "object",
+        "properties": {
+          "terminalId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ServerTerminalType"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ResourceAssignmentResponseType": {
+        "enum": [
+          "none",
+          "accepted",
+          "rejected"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "ResourceAssignmentResponseType",
+          "modelAsString": true
+        }
+      },
+      "ServerTerminal": {
+        "required": [
+          "address",
+          "provider",
+          "role",
+          "source",
+          "status",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/ServerTerminalType"
+          },
+          "address": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TerminalStatus"
+          },
+          "lastChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source": {
+            "$ref": "#/components/schemas/TerminalSource"
+          },
+          "role": {
+            "$ref": "#/components/schemas/TerminalRoles"
+          },
+          "sourceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "settings": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          },
+          "provider": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ServerTerminalType": {
+        "enum": [
+          "email",
+          "phoneNumber",
+          "alphaNumeric"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "ServerTerminalType",
+          "modelAsString": true
+        }
+      },
+      "TerminalAssignment": {
+        "required": [
+          "tenantId",
+          "timeStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "terminalId": {
+            "type": "string",
+            "nullable": true
+          },
+          "tenantId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "timeStamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TerminalAssignmentRequest": {
+        "required": [
+          "id",
+          "requester",
+          "terminal",
+          "timeStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "terminal": {
+            "$ref": "#/components/schemas/RequestedTerminal"
+          },
+          "requester": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "timeStamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "response": {
+            "$ref": "#/components/schemas/TerminalAssignmentResponse"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "assignment": {
+            "$ref": "#/components/schemas/TerminalAssignment"
+          }
+        }
+      },
+      "TerminalAssignmentResponse": {
+        "required": [
+          "responder",
+          "responseType",
+          "timeStamp"
+        ],
+        "type": "object",
+        "properties": {
+          "responder": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "responseType": {
+            "$ref": "#/components/schemas/ResourceAssignmentResponseType"
+          },
+          "timeStamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TerminalLookup": {
+        "required": [
+          "address",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/ServerTerminalType"
+          },
+          "address": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "TerminalProvider": {
+        "required": [
+          "code",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "code": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "terminalTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServerTerminalType"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "TerminalRoles": {
+        "enum": [
+          "default",
+          "sender",
+          "receiver",
+          "both"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "TerminalRoles",
+          "modelAsString": true
+        }
+      },
+      "TerminalSource": {
+        "enum": [
+          "unknown",
+          "inventory",
+          "customer"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "TerminalSource",
+          "modelAsString": true
+        }
+      },
+      "TerminalStatus": {
+        "enum": [
+          "none",
+          "active",
+          "reported",
+          "blocked"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "TerminalStatus",
+          "modelAsString": true
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://deveel.eu.auth0.com/oauth/token",
+            "scopes": {
+              "read:inventory": "Read access to an inventory of resources",
+              "write:inventory": "Write access to an inventory of resources",
+              "read:tenant": "Read access to the Tenant information",
+              "write:tenant": "Write access to tenant information",
+              "create:terminal": "Create new server terminals",
+              "read:terminal": "Read access to the information of existing terminals",
+              "delete:terminal": "Delete existing terminals",
+              "update:terminal": "Update the information of existing terminals",
+              "request:terminal": "Request the assignment of a terminal from the inventory",
+              "read:terminal_requests": "Read access to the requests of assignments of terminals",
+              "assign:terminal": "Assign terminals to tenants"
+            }
+          },
+          "authorizationCode": {
+            "authorizationUrl": "https://deveel.eu.auth0.com/authorize",
+            "tokenUrl": "https://deveel.eu.auth0.com/oauth/token",
+            "scopes": {
+              "read:inventory": "Read access to an inventory of resources",
+              "write:inventory": "Write access to an inventory of resources",
+              "read:tenant": "Read access to the Tenant information",
+              "write:tenant": "Write access to tenant information",
+              "create:terminal": "Create new server terminals",
+              "read:terminal": "Read access to the information of existing terminals",
+              "delete:terminal": "Delete existing terminals",
+              "update:terminal": "Update the information of existing terminals",
+              "request:terminal": "Request the assignment of a terminal from the inventory",
+              "read:terminal_requests": "Read access to the requests of assignments of terminals",
+              "assign:terminal": "Assign terminals to tenants"
+            }
+          }
+        }
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "name": "X-API-KEY",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": [
+        "read:inventory",
+        "write:inventory",
+        "read:tenant",
+        "write:tenant",
+        "create:terminal",
+        "read:terminal",
+        "delete:terminal",
+        "update:terminal",
+        "request:terminal",
+        "read:terminal_requests",
+        "assign:terminal"
+      ]
+    },
+    {
+      "apiKey": [ ]
+    }
+  ]
+}

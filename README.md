@@ -12,6 +12,12 @@ Such specifications are produced into this repository during the CI/CD pipleine 
 
 The structure of the repository is providing a main point of access through the _specs_ subfolder, which contains child folders for each of the services: in there the specifications are listed by their orientation (_management plane_ or _data plane_) and their version.
 
+## File Name Notation
+
+The names of the specification files are composed by some fixed parts (such as the _name of the service_) and variable parts (such as the _version_ and _notes_).
+
+The current notation of the version of the specifications implements the _Semantic Versioning_ (_SemVer_) model, that is progressive and structured in _major_ and _minor_ versions, prepended by a 'v' character (eg. _v1.1_ or _v2_): the version of the specifications reflects the one of the service they refer to.
+
 An example structure would loook like
 
 ```
@@ -20,8 +26,11 @@ root/
 |   |-- channel/
 |   |   |-- management/
 |   |   |   |-- v1
+|   |   |   |   |-- channel-v1.json
 |   |   |   |-- v1.1
+|   |   |   |   |-- channel-v1.1.json
 |   |-- message/
 |   |   |-- data/
-|   |   |   |-- v1 
+|   |   |   |-- v1
+|   |   |   |   |-- message-v1.json
 ```

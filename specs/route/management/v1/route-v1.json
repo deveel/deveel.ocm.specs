@@ -1,0 +1,915 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Route Management API 1",
+    "contact": {
+      "name": "Antonello Provenzano",
+      "email": "antonello@deveel.com"
+    },
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.ocm.deveel.net"
+    }
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "tags": [
+          "route"
+        ],
+        "summary": "Creates a new Route of Incoming Messages",
+        "operationId": "createRoute",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewMessageRoute"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The route was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageRoute"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "404": {
+            "description": "The channel was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "405": {
+            "description": "The channel does not support inbound messaging",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "406": {
+            "description": "The terminal associated to the route is not supported by the channel",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "409": {
+            "description": "Another route matches the given receiving terminal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "create:route"
+            ]
+          }
+        ]
+      }
+    },
+    "/{id}": {
+      "get": {
+        "tags": [
+          "route"
+        ],
+        "summary": "Gets a Route of Incoming Messages",
+        "operationId": "getRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The route with the given ID was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageRoute"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No route was found with the given ID"
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:route"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "route"
+        ],
+        "summary": "Deletes a given Message Route",
+        "operationId": "deleteRoute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The route was successfully deleted"
+          },
+          "404": {
+            "description": "None route was found with the given ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "delete:route"
+            ]
+          }
+        ]
+      }
+    },
+    "/{routeId}/status": {
+      "put": {
+        "tags": [
+          "message",
+          "route"
+        ],
+        "summary": "Updates the Status of a Message Route",
+        "operationId": "setRouteStatus",
+        "parameters": [
+          {
+            "name": "routeId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRouteStatusUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The updated version of the route",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageRoute"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The update request did not cause any changes"
+          },
+          "400": {
+            "description": "The new status is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "404": {
+            "description": "None route was found with the given ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "update:route"
+            ]
+          }
+        ]
+      }
+    },
+    "/page": {
+      "get": {
+        "tags": [
+          "route"
+        ],
+        "summary": "Gets a page of Message Routes",
+        "operationId": "getRoutePage",
+        "parameters": [
+          {
+            "name": "number",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The page was successfully returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageQueryResultOfMessageRoute"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:route"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ChannelType": {
+        "enum": [
+          "sms",
+          "messenger",
+          "whatsapp",
+          "email",
+          "viber",
+          "rcs",
+          "push",
+          "telegram",
+          "sandbox"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "ChannelType",
+          "modelAsString": true
+        }
+      },
+      "EmailAddress": {
+        "required": [
+          "address"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessageField": {
+        "enum": [
+          "subject",
+          "body",
+          "context"
+        ],
+        "type": "string",
+        "description": "Enumerates the fields of a message that\r\ncan be used to match a route",
+        "x-ms-enum": {
+          "name": "MessageField",
+          "modelAsString": true
+        }
+      },
+      "MessageRoute": {
+        "required": [
+          "active",
+          "channel",
+          "destinationUrl",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/RouteChannel"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The unique identifier of the route"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The descriptive name of the route"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Indicates the active state of a route"
+          },
+          "destinationUrl": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The HTTP URL address where the inbound message\r\nwill be delivered"
+          },
+          "retryCount": {
+            "type": "integer",
+            "description": "The number of retries to deliver the inbound message",
+            "format": "int32"
+          },
+          "secret": {
+            "type": "string",
+            "description": "A secret code that is used to sign the webhooks",
+            "nullable": true
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": { },
+            "description": "A context that is appended to the message before\r\nthe delivery (useful for correlation)",
+            "nullable": true
+          },
+          "match": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouteMatchRule"
+            },
+            "description": "A list of rules that are used to match a message to the given route",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Specifies the rules to route inbound messages (delivered as webhooks)"
+      },
+      "MessageRouteStatusUpdate": {
+        "required": [
+          "active"
+        ],
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Wether or not the message route should be active or not"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The request to change the status of a message route"
+      },
+      "NewMessageRoute": {
+        "required": [
+          "channel",
+          "destinationUrl",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "channel": {
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "type": "string",
+            "description": "The name of the channel transporting the inbound messages"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "A descriptive name of the route (for display)"
+          },
+          "destinationUrl": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The HTTP URL address where the inbound message\r\nwill be delivered"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the route must be set as immediately active"
+          },
+          "retryCount": {
+            "type": "integer",
+            "description": "The number of retries to deliver the inbound message",
+            "format": "int32"
+          },
+          "secret": {
+            "type": "string",
+            "description": "A secret code that is used to sign the webhooks",
+            "nullable": true
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": { },
+            "description": "A context that is appended to the message before\r\nthe delivery (useful for correlation)",
+            "nullable": true
+          },
+          "match": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RouteMatchRule"
+            },
+            "description": "A list of rules that are used to match a message to the given route",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The request to create a new route to receive inbound messages"
+      },
+      "PageQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PageQueryResultOfMessageRoute": {
+        "required": [
+          "query",
+          "totalItems",
+          "totalPages"
+        ],
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageRoute"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "query": {
+            "$ref": "#/components/schemas/PageQuery"
+          },
+          "self": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "first": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "last": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "RouteChannel": {
+        "required": [
+          "id",
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "pattern": "^[a-zA-Z0-9_.-]+$",
+            "type": "string",
+            "description": "The name of the channel instance"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ChannelType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The unique identifier of the channel"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Describes a channel that receives and routes\r\ninbound messages"
+      },
+      "RouteMatchRule": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "$ref": "#/components/schemas/TextMatch"
+          },
+          "receiver": {
+            "$ref": "#/components/schemas/Terminal"
+          }
+        },
+        "additionalProperties": false,
+        "description": "A rule used to match the configuration for the routing of a message"
+      },
+      "Terminal": {
+        "type": "object",
+        "properties": {
+          "emailAddress": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "email": {
+            "$ref": "#/components/schemas/EmailAddress"
+          },
+          "number": {
+            "type": "string",
+            "format": "tel",
+            "nullable": true
+          },
+          "conversation": {
+            "type": "string",
+            "nullable": true
+          },
+          "user": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextMatch": {
+        "required": [
+          "field",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "field": {
+            "$ref": "#/components/schemas/MessageField"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/TextMatchOperator"
+          },
+          "value": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The textual value to be matched"
+          }
+        },
+        "additionalProperties": false,
+        "description": "A rule that matches a given text in a field of messages"
+      },
+      "TextMatchOperator": {
+        "enum": [
+          "startsWith",
+          "endsWith",
+          "contains",
+          "notContains"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "TextMatchOperator",
+          "modelAsString": true
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": { }
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://deveel.eu.auth0.com/oauth/token",
+            "scopes": {
+              "read:tenant": "Read access to the Tenant information",
+              "write:tenant": "Write access to tenant information",
+              "create:route": "Create new message routes",
+              "read:route": "Read access to message route information",
+              "update:route": "Update the properties of message routes",
+              "delete:route": "Delete existing message routes"
+            }
+          },
+          "authorizationCode": {
+            "authorizationUrl": "https://deveel.eu.auth0.com/authorize",
+            "tokenUrl": "https://deveel.eu.auth0.com/oauth/token",
+            "scopes": {
+              "read:tenant": "Read access to the Tenant information",
+              "write:tenant": "Write access to tenant information",
+              "create:route": "Create new message routes",
+              "read:route": "Read access to message route information",
+              "update:route": "Update the properties of message routes",
+              "delete:route": "Delete existing message routes"
+            }
+          }
+        }
+      },
+      "apiKey": {
+        "type": "apiKey",
+        "name": "X-API-KEY",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": [
+        "read:tenant",
+        "write:tenant",
+        "create:route",
+        "read:route",
+        "update:route",
+        "delete:route"
+      ]
+    },
+    {
+      "apiKey": [ ]
+    }
+  ]
+}

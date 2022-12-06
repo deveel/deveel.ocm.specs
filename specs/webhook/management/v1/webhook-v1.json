@@ -1,0 +1,1334 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Webhook Management API v1",
+    "contact": {
+      "name": "Antonello Provenzano",
+      "email": "antonello@deveel.com"
+    },
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.ocm.deveel.net"
+    }
+  ],
+  "paths": {
+    "/subscription": {
+      "post": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Subscribes to Messages States",
+        "operationId": "webhook_subscribe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWebhookSubscription"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWebhookSubscription"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewWebhookSubscription"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The webhook subscription was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSubscription"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSubscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The contents of the request is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "404": {
+            "description": "The channel was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Gets a page of Webhook Subscriptions",
+        "operationId": "webhook_getSubscriptions",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "maximum": 50,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The page of subscriptions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageQueryResultOfWebhookSubscription"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageQueryResultOfWebhookSubscription"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The page number or size are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:webhook_subscription"
+            ]
+          }
+        ]
+      }
+    },
+    "/subscription/{id}": {
+      "get": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Gets a Subscription to Webhooks",
+        "operationId": "webhook_getSubscription",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The subscription was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSubscription"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSubscription"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The subscription was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "read:webhook_subscription"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Unsubscribes from Webhooks",
+        "operationId": "webhook_unsubscribe",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The subscription was deleted"
+          },
+          "304": {
+            "description": "The subscription was not deleted"
+          },
+          "404": {
+            "description": "None subscription with the given ID was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "unsubscribe:webhook"
+            ]
+          }
+        ]
+      }
+    },
+    "/subscription/{id}/status": {
+      "put": {
+        "tags": [
+          "webhook"
+        ],
+        "summary": "Sets the Subscription Status",
+        "operationId": "webhook_setStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookSubscriptionStatusUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookSubscriptionStatusUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookSubscriptionStatusUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The subscription was successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSubscription"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookSubscription"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The subscription was not updated"
+          },
+          "404": {
+            "description": "The subscription was not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "400": {
+            "description": "The new state is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "401": {
+            "description": "The request is unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          },
+          "403": {
+            "description": "The requested action is forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "update:webhook_subscription"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BinaryFilter": {
+        "required": [
+          "field",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "boolean": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "point": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "op": {
+            "$ref": "#/components/schemas/WebFilterOperator"
+          },
+          "range": {
+            "$ref": "#/components/schemas/Range"
+          }
+        }
+      },
+      "ContainsFilter": {
+        "required": [
+          "field",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "value": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "EndsWithFilter": {
+        "required": [
+          "field",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "value": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "EqualFilter": {
+        "required": [
+          "field"
+        ],
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "boolean": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "point": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "logical": {
+            "$ref": "#/components/schemas/LogicalFilter"
+          },
+          "and": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            },
+            "nullable": true
+          },
+          "or": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            },
+            "nullable": true
+          },
+          "binary": {
+            "$ref": "#/components/schemas/BinaryFilter"
+          },
+          "eq": {
+            "$ref": "#/components/schemas/EqualFilter"
+          },
+          "ne": {
+            "$ref": "#/components/schemas/NotEqualFilter"
+          },
+          "gt": {
+            "$ref": "#/components/schemas/GreaterThanFilter"
+          },
+          "gte": {
+            "$ref": "#/components/schemas/GreaterThanOrEqualFilter"
+          },
+          "lt": {
+            "$ref": "#/components/schemas/LesserThanFilter"
+          },
+          "lte": {
+            "$ref": "#/components/schemas/LesserThanOrEqualFilter"
+          },
+          "startsWith": {
+            "$ref": "#/components/schemas/StartsWithFilter"
+          },
+          "endsWith": {
+            "$ref": "#/components/schemas/EndsWithFilter"
+          },
+          "contains": {
+            "$ref": "#/components/schemas/ContainsFilter"
+          },
+          "between": {
+            "$ref": "#/components/schemas/RangeFilter"
+          },
+          "not": {
+            "$ref": "#/components/schemas/Filter"
+          }
+        }
+      },
+      "FilterValue": {
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "boolean": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "point": {
+            "$ref": "#/components/schemas/GeoPoint"
+          }
+        }
+      },
+      "GeoPoint": {
+        "required": [
+          "lat",
+          "lon"
+        ],
+        "type": "object",
+        "properties": {
+          "lon": {
+            "type": "number",
+            "format": "double"
+          },
+          "lat": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "GreaterThanFilter": {
+        "required": [
+          "field"
+        ],
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "boolean": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "point": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "GreaterThanOrEqualFilter": {
+        "required": [
+          "field"
+        ],
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "boolean": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "point": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "LesserThanFilter": {
+        "required": [
+          "field"
+        ],
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "boolean": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "point": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "LesserThanOrEqualFilter": {
+        "required": [
+          "field"
+        ],
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "boolean": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "point": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "LogicalFilter": {
+        "required": [
+          "filters",
+          "op"
+        ],
+        "type": "object",
+        "properties": {
+          "filters": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          },
+          "op": {
+            "$ref": "#/components/schemas/LogicalOperator"
+          }
+        }
+      },
+      "LogicalOperator": {
+        "enum": [
+          "and",
+          "or"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "LogicalOperator",
+          "modelAsString": true
+        }
+      },
+      "NewWebhookSubscription": {
+        "required": [
+          "destinationUrl",
+          "events"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A descriptive custom name of the subscription",
+            "nullable": true
+          },
+          "destinationUrl": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The URL where the webhooks should be delivered",
+            "format": "uri"
+          },
+          "secret": {
+            "type": "string",
+            "description": "An optional secret word that is used to sign the webhooks to secure them",
+            "nullable": true
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A set of optional headers that are attached to the webhook\r\nrequest (for correlation)",
+            "nullable": true
+          },
+          "events": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The type of message event to subscribe"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            },
+            "description": "An optional set of filters that restrict the events to be notified",
+            "nullable": true
+          },
+          "retryCount": {
+            "type": "integer",
+            "description": "The number of attempts to perform when trying to deliver\r\nthe webhook, before failing",
+            "format": "int32"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": { },
+            "description": "A list of metadata associated to the subscription",
+            "nullable": true
+          }
+        },
+        "description": "Requests the subscription to the notification of event\r\noccurrences within the system"
+      },
+      "NotEqualFilter": {
+        "required": [
+          "field"
+        ],
+        "type": "object",
+        "properties": {
+          "string": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "boolean": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "point": {
+            "$ref": "#/components/schemas/GeoPoint"
+          },
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "PageQuery": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "PageQueryResultOfWebhookSubscription": {
+        "required": [
+          "query",
+          "totalItems",
+          "totalPages"
+        ],
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookSubscription"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "query": {
+            "$ref": "#/components/schemas/PageQuery"
+          },
+          "self": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "first": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "last": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "Range": {
+        "type": "object",
+        "properties": {
+          "lower": {
+            "$ref": "#/components/schemas/FilterValue"
+          },
+          "upper": {
+            "$ref": "#/components/schemas/FilterValue"
+          }
+        }
+      },
+      "RangeFilter": {
+        "required": [
+          "field"
+        ],
+        "type": "object",
+        "properties": {
+          "lower": {
+            "$ref": "#/components/schemas/FilterValue"
+          },
+          "upper": {
+            "$ref": "#/components/schemas/FilterValue"
+          },
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "StartsWithFilter": {
+        "required": [
+          "field",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "field": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "value": {
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "WebFilterOperator": {
+        "enum": [
+          "eq",
+          "ne",
+          "gt",
+          "gte",
+          "lt",
+          "lte",
+          "between",
+          "contains",
+          "startsWith",
+          "endsWith"
+        ],
+        "type": "string",
+        "x-ms-enum": {
+          "name": "WebFilterOperator",
+          "modelAsString": true
+        }
+      },
+      "WebhookSubscription": {
+        "required": [
+          "active",
+          "destinationUrl",
+          "events",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "destinationUrl": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The HTTP URL address where the notifications\r\nare delivered (as webhooks)",
+            "format": "uri"
+          },
+          "secret": {
+            "type": "string",
+            "description": "An optional secret string used to sign the webhooks\r\ndelivered to the subscriber",
+            "nullable": true
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A set of additional headers attached to the HTTP request\r\nfired towards the destination URL (typically used for context)",
+            "nullable": true
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The unique identider of the subscription"
+          },
+          "events": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The list of message event types subscribed"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "A descriptive name of the subscription (for display)"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "The active state of the subscription"
+          },
+          "retryCount": {
+            "type": "integer",
+            "description": "The number of attempts to perform when trying to deliver\r\nthe webhook, before failing",
+            "format": "int32"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            },
+            "description": "An optional set of filters used to restrict the\r\ndelivery of webhooks",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": { },
+            "description": "A list of metadata associated to the subscription",
+            "nullable": true
+          }
+        },
+        "description": "The subscription to the notification of an event"
+      },
+      "WebhookSubscriptionStatusUpdate": {
+        "required": [
+          "active"
+        ],
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Wether or not the subscription should be active"
+          }
+        },
+        "description": "A request to change the active status of a subscription"
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://deveel.eu.auth0.com/oauth/token",
+            "scopes": {
+              "subscribe:webhook": "Subscribe to notifications of events occurred in the platform",
+              "unsubscribe:webhook": "Unsubscribe from the notifications of events",
+              "read:webhook_subscription": "Read access to the webhook subscriptions",
+              "update:webhook_subscription": "Update the configuration and status of subscriptions"
+            }
+          },
+          "authorizationCode": {
+            "authorizationUrl": "https://deveel.eu.auth0.com/authorize",
+            "tokenUrl": "https://deveel.eu.auth0.com/oauth/token",
+            "scopes": {
+              "subscribe:webhook": "Subscribe to notifications of events occurred in the platform",
+              "unsubscribe:webhook": "Unsubscribe from the notifications of events",
+              "read:webhook_subscription": "Read access to the webhook subscriptions",
+              "update:webhook_subscription": "Update the configuration and status of subscriptions"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": [
+        "subscribe:webhook",
+        "unsubscribe:webhook",
+        "read:webhook_subscription",
+        "update:webhook_subscription"
+      ]
+    }
+  ]
+}

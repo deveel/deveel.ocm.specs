@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://api.ocm.deveel.net"
+      "url": "https://api.ocm.deveel.net/webhook"
     }
   ],
   "paths": {
@@ -956,7 +956,7 @@
           },
           "metadata": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {},
             "description": "A list of metadata associated to the subscription",
             "nullable": true
           }
@@ -1102,7 +1102,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "Range": {
         "type": "object",
@@ -1186,7 +1186,7 @@
             "readOnly": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "WebFilterOperator": {
         "enum": [
@@ -1273,7 +1273,7 @@
           },
           "metadata": {
             "type": "object",
-            "additionalProperties": { },
+            "additionalProperties": {},
             "description": "A list of metadata associated to the subscription",
             "nullable": true
           }

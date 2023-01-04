@@ -577,11 +577,6 @@
         "operationId": "requestTerminal",
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewTerminalAssignmentRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/NewTerminalAssignmentRequest"
@@ -1058,7 +1053,12 @@
         "properties": {
           "settings": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": { },
+            "nullable": true
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": { },
             "nullable": true
           },
           "provider": {
@@ -1118,7 +1118,7 @@
             "$ref": "#/components/schemas/TerminalStatus"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "PageQuery": {
         "type": "object",
@@ -1148,34 +1148,6 @@
         ],
         "type": "object",
         "properties": {
-          "query": {
-            "$ref": "#/components/schemas/PageQuery"
-          },
-          "self": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "first": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "next": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "previous": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "last": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
           "totalItems": {
             "type": "integer",
             "format": "int32",
@@ -1193,17 +1165,7 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
-          }
-        }
-      },
-      "PageQueryResultOfTerminalAssignmentRequest": {
-        "required": [
-          "query",
-          "totalItems",
-          "totalPages"
-        ],
-        "type": "object",
-        "properties": {
+          },
           "query": {
             "$ref": "#/components/schemas/PageQuery"
           },
@@ -1231,7 +1193,17 @@
             "type": "string",
             "format": "uri",
             "nullable": true
-          },
+          }
+        }
+      },
+      "PageQueryResultOfTerminalAssignmentRequest": {
+        "required": [
+          "query",
+          "totalItems",
+          "totalPages"
+        ],
+        "type": "object",
+        "properties": {
           "totalItems": {
             "type": "integer",
             "format": "int32",
@@ -1249,6 +1221,34 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          },
+          "query": {
+            "$ref": "#/components/schemas/PageQuery"
+          },
+          "self": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "first": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "next": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "previous": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "last": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
           }
         }
       },
@@ -1277,7 +1277,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "RequestedTerminal": {
         "required": [
@@ -1347,7 +1347,12 @@
           },
           "settings": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": { },
+            "nullable": true
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": { },
             "nullable": true
           },
           "provider": {
@@ -1379,10 +1384,6 @@
         ],
         "type": "object",
         "properties": {
-          "terminalId": {
-            "type": "string",
-            "nullable": true
-          },
           "tenantId": {
             "minLength": 1,
             "type": "string"
@@ -1390,6 +1391,10 @@
           "timeStamp": {
             "type": "string",
             "format": "date-time"
+          },
+          "terminalId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1531,16 +1536,6 @@
       "ValidationProblemDetails": {
         "type": "object",
         "properties": {
-          "errors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "nullable": true
-          },
           "type": {
             "type": "string",
             "nullable": true
@@ -1561,9 +1556,20 @@
           "instance": {
             "type": "string",
             "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true,
+            "readOnly": true
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       }
     },
     "securitySchemes": {
@@ -1629,7 +1635,7 @@
       ]
     },
     {
-      "apiKey": []
+      "apiKey": [ ]
     }
   ]
 }
